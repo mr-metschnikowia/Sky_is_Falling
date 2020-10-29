@@ -20,7 +20,7 @@ brick_colours = []
 player_size = 50
 player_location = [400-player_size/2, 550]
 score = 0
-with open(r'high_score\stats.txt','r') as f:
+with open(r'stats.txt','r') as f:
     high_score = int(f.read())
 myFont = pygame.font.SysFont('monospace', 20)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -120,7 +120,7 @@ while not game_over:
     screen.blit(label, (10, 10))
     if detect_collision_new(enemy_list,player_location, brick_colours):
         if score > high_score:
-            with open(r'high_score/stats.txt', 'w') as f:
+            with open(r'stats.txt', 'w') as f:
                 f.write(str(score))
         game_over = True
     pygame.draw.rect(screen, python_green, (player_location[0],player_location[1],player_size,player_size))
