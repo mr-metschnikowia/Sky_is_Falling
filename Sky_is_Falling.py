@@ -1,6 +1,8 @@
 import pygame
 import sys
 import random
+import time
+import time
 # importing prerequisites
 
 
@@ -18,9 +20,11 @@ YELLOW = (255,255,0)
 enemy_list = []
 brick_colours = []
 player_size = 50
+enemy_size = 50
 player_location = [400-player_size/2, 550]
 score = 0
-with open(r'stats.txt','r') as f:
+start = 0
+with open(r'high_score\stats.txt','r') as f:
     high_score = int(f.read())
 myFont = pygame.font.SysFont('monospace', 20)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -40,13 +44,13 @@ def generate_colour_list(brick_colours):
 def generate_enemy_list(enemy_list):
     delay = random.random()
     if len(enemy_list) < 10 and delay < 0.01:
-        new_enemy_location = [random.randrange(0, WIDTH - player_size), 0]
+        new_enemy_location = [random.randrange(0, WIDTH - enemy_size), 0]
         enemy_list.append(new_enemy_location)
 # generates coordinates of blocks
 
 def generate_enemies(enemy_list, brick_colours):
     for index,enemy_location in enumerate(enemy_list):
-        pygame.draw.rect(screen, brick_colours[index], (enemy_location[0], enemy_location[1], player_size, player_size))
+        pygame.draw.rect(screen, brick_colours[index], (enemy_location[0], enemy_location[1], enemy_size, enemy_size))
 # creates blocks on canvas
 
 def update_enemy_position(enemy_list, brick_colours, score):
@@ -60,7 +64,21 @@ def update_enemy_position(enemy_list, brick_colours, score):
     return score
 # block movement
 
-def detect_collision_new(enemy_list, player_location, brick_colours):
+def detect_collision_red(enemy_list, player_location, brick_colours):
+    for idx, enemy_location in enumerate(enemy_list):
+        p_x = player_location[0]
+        p_y = player_location[1]
+        e_x = enemy_location[0]
+        e_y = enemy_location[1]
+        if ((e_x >= p_x) and (e_x <= p_x + player_size)) or ((p_x > e_x) and (p_x <= e_x + enemy_size)):
+            if ((e_y <= p_y) and (p_y <= e_y + enemy_size)) or ((e_y >= p_y) and (e_y <= p_y + player_size)):
+                if brick_colours[idx] == RED:
+                    return True
+            break
+    return False
+# hit box
+
+def detect_collision_yellow(enemy_list, player_location, brick_colours):
     for idx, enemy_location in enumerate(enemy_list):
         p_x = player_location[0]
         p_y = player_location[1]
@@ -68,7 +86,9 @@ def detect_collision_new(enemy_list, player_location, brick_colours):
         e_y = enemy_location[1]
         if ((e_x >= p_x) and (e_x <= p_x + player_size)) or ((p_x > e_x) and (p_x <= e_x + player_size)):
             if ((e_y <= p_y) and (p_y <= e_y + player_size)) or ((e_y >= p_y) and (e_y <= p_y + player_size)):
-                if brick_colours[idx] == RED:
+                if brick_colours[idx] == YELLOW:
+                    enemy_list.pop(idx)
+                    brick_colours.pop(idx)
                     return True
             break
     return False
@@ -118,11 +138,16 @@ while not game_over:
     high_score_label = myFont.render(high_score_text, 1, PINK)
     screen.blit(high_score_label, (10,30))
     screen.blit(label, (10, 10))
-    if detect_collision_new(enemy_list,player_location, brick_colours):
+    if detect_collision_red(enemy_list, player_location, brick_colours):
         if score > high_score:
-            with open(r'stats.txt', 'w') as f:
+            with open(r'high_score/stats.txt', 'w') as f:
                 f.write(str(score))
         game_over = True
+    if detect_collision_yellow(enemy_list, player_location, brick_colours):
+        player_size = 10
+        start = time.clock()
+    if time.clock() - start > 5:
+        player_size = 50
     pygame.draw.rect(screen, python_green, (player_location[0],player_location[1],player_size,player_size))
     border(player_location)
     pygame.display.update()
