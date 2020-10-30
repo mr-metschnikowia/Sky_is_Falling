@@ -5,4 +5,4 @@ Features:
 1. Background changes with accumulation of points.
 2. High score is saved.
 3. Speed of bricks is proportional to points accumulated.
-4. Yelllow bricks will make you shrink to half the size for 10 seconds - in development.
+4. Yelllow bricks will make you shrink to half the size for 5 seconds.
