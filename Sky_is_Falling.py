@@ -144,7 +144,7 @@ while not game_over:
                 f.write(str(score))
         game_over = True
     if detect_collision_yellow(enemy_list, player_location, brick_colours):
-        player_size = 10
+        player_size = 25
         start = time.clock()
     if time.clock() - start > 5:
         player_size = 50
