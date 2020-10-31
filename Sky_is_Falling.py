@@ -14,6 +14,7 @@ HEIGHT = 600
 
 pygame.mixer.music.load(r'music/unravel.wav')
 pygame.mixer.music.play(loops=-1)
+# loading sweet tunes
 
 python_green = (121,230,144)
 PURPLE = (0,0,102)
